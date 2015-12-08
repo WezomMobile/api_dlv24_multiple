@@ -1,181 +1,2404 @@
 FORMAT: 1A
-HOST: http://polls.apiblueprint.org/
+HOST: https://delivery.apiblueprint.org/
 
-# Panasonic
+# REST API грузоперевозки (множественные доставки) 1.0
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+Спецификация грузоперевозок 
 
-# Polls API Root [/]
+## Group Операции с оплатой
 
-This resource does not have any attributes. Instead it offers the initial
-API affordances in the form of the links in the JSON body.
+## Список платежных систем [GET /payment_systems]
 
-It is recommend to follow the “url” link values,
-[Link](https://tools.ietf.org/html/rfc5988) or Location headers where
-applicable to retrieve resources. Instead of constructing your own URLs,
-to keep your client decoupled from implementation details.
++ Request
+    
+    + Headers
+        
+            Accept: "application/json"
+            Authorization: access_token
 
-## Retrieve the Entry Point [GET]
++ Response 200 (application/json)
+
+    + Attributes (object)
+        + payment_systems (array[object]) - Платежные системы
+            + payment_system (required, enum[number]) - Платежная система
+                + Members
+                    + 0 - Privat 24
+                    + 1 - Pay pall
+                    + 2 - AliPay
+                    + 3 - TenPay
+                    + 4 - Visa
+                    + 5 - Mastercard
+            + merchant_id (string) - Идентификатор мерчанта
+    
+    + Body                
+
+            {   
+                "payment_systems":
+                                [
+                                    {
+                                        "payment_system":0,
+                                        "merchant_id":"....",
+                                        "currency":"UAH"
+                                    }
+                                ],            
+                "success":true,
+                "errors":[]
+            }
+
+## Платежи перевозчика/курьера [GET /payments{?from_date,to_date}]
+
++ Parameters
+
+    + from_date: 1439299986 (number) - Начальная дата платежей, миллисекунды
+    + to_date: 1439399986 (number) - Конечная дата платежей, миллисекунды
+
++ Request
+    
+    + Headers
+        
+            Accept: "application/json"
+            Authorization: access_token
+
++ Response 200 (application/json)
+
+    + Attributes
+        
+        + order_id (number) - Идентификатор заказа
+        + customer_name (string) - ФИО заказчика/плательщика
+        + payment_status - Статус оплаты
+            + Members
+                + 0 - Зачислено
+                + 1 - Оплачено
+                + 2 - Ожидается
+        + payment_system (enum[number]) - Платежная система
+            + Members
+                + 0 - Privat 24
+                + 1 - Pay pall
+                + 2 - AliPay
+                + 3 - TenPay
+                + 4 - Visa
+                + 5 - Mastercard
+        + amount (number) - Сумма платежа         
+        + currency (string) - Валюта
+        + payment_date (number) - Дата платежа, миллисекунды    
+    
+    + Body                
+
+            {   
+                "payments":
+                                [
+                                    {   
+                                        "order_id":536,
+                                        "customer_name":"Иванов Иван Иванович",
+                                        "payment_status":0,
+                                        "payment_system":0,
+                                        "amount":1100,
+                                        "currency":"UAH",
+                                        "payment_date":1439296986
+                                    },
+                                    {   
+                                        "order_id":535,
+                                        "customer_name":"Иванченко Эдуард Петрович",
+                                        "payment_status":0,
+                                        "payment_system":0,
+                                        "amount":1600,
+                                        "currency":"UAH",
+                                        "payment_date":1439396986
+                                    },
+                                    {   
+                                        "order_id":534,
+                                        "customer_name":"Мудрый Сергей Петрович",
+                                        "payment_status":1,
+                                        "payment_system":0,
+                                        "amount":6100,
+                                        "currency":"UAH",
+                                        "payment_date":1439496986
+                                    },
+                                    {   
+                                        "order_id":533,
+                                        "customer_name":"Рождественский Артем Григорьевич",
+                                        "payment_status":1,
+                                        "payment_system":0,
+                                        "amount":7100,
+                                        "currency":"UAH",
+                                        "payment_date":1439496986
+                                    },
+                                    {   
+                                        "order_id":532,
+                                        "customer_name":"Мудрый Сергей Петрович",
+                                        "payment_status":2,
+                                        "payment_system":0,
+                                        "amount":6100,
+                                        "currency":"UAH",
+                                        "payment_date":1439496986
+                                    },
+                                    {   
+                                        "order_id":531,
+                                        "customer_name":"Рождественский Артем Григорьевич",
+                                        "payment_status":2,
+                                        "payment_system":0,
+                                        "amount":7100,
+                                        "currency":"UAH",
+                                        "payment_date":1439496986
+                                    }
+                                ],            
+                "success":true,
+                "errors":[]
+            }
+            
+## Group Вход в систему
+
+## Информация сервиса [GET /service_information]
+
++ Parameters
+    
+    + country_code: 'uk' (string) - Код страны в формате ISO 639-1
+    
++ Response 200 (application/json)
+    
+    + Attributes
+        
+        + currency (string) - Валюта
+        + contact_phones (array[string]) - Контактные телефоны
+        + countries (array[object]) - Список стран работающих с сервисом
+        + cities (array[object]) - Список городов работающих с сервисом
+    
+    + Body    
+
+            {   
+                "countries":
+                            [
+                                {   
+                                    "country_id":1,
+                                    "country":"Україна",
+                                    "cities":
+                                            [
+                                                {
+                                                    "city_id":1,
+                                                    "name":"Херсон",
+                                                    "region":"Херсонська область"
+                                                },
+                                                {
+                                                    "city_id":2,
+                                                    "name":"Киев",
+                                                    "region":"Киевская область"
+                                                }
+                                            ]
+                                },
+                                {   
+                                    "country_id":2,
+                                    "country":"Китай",
+                                    "cities":
+                                            [
+                                                {
+                                                    "city_id":1,
+                                                    "name":"Баоцзи",
+                                                    "region":"Провинции Хэбэй"
+                                                },
+                                                {
+                                                    "city_id":2,
+                                                    "name":"Баодин",
+                                                    "region":"Провинции Хэбэй КНР"
+                                                }
+                                            ]
+                                }
+                            ],
+                "currency":"UAH",
+                "contact_phones":["380999645896"],
+                "success":true,
+                "errors":[]
+            }
+
+## Предварительная регистрация [POST /advance_registration]
+
++ Request 
+    
+    + Attributes
+        
+        + email (required, string) - Логин (почта)
+        + password (required, string) - Пароль
+
++ Response 200 (application/json)
+
+    + Body   
+        
+            {   
+                "success":true,
+                "errors":[]
+            }       
+        
+## Проверка кода подтверждения регистрации [POST /registration_check_code_validate]        
+
++ Request
+
+    + Attributes
+        
+        + email (string) - Почта
+        + code (string) - Код подтверждения регистрации
+        
++ Response 200 (application/json)
+
+    + Attributes
+        
+        + access_token (string) - Токен доступа к данным
+    
+    + Body    
+
+            {   
+                "access_token":"4563jh3434hkg",
+                "success":true,
+                "errors":[]
+            }
+
+## Регистрация [POST /registration]
+
++ Request (application/json)
+
+    + Headers
+        
+            Accept: "application/json"
+            Authorization: access_token
+
+    + Attributes
+        
+        + user_type (enum[number]) - Тип пользователя
+            + Members
+                + 0 - Заказчик
+                + 1 - Курьер
+                + 2 - Перевозчик 
+        + social_id: "1200554523" (string) - идентификатор в соц. сети
+        + social: 0 (enum[number]) - через какую соц. сеть зарегистрировался пользователь
+            + Members
+                + 0 - Facebook
+                + 1 - Renren
+                + 2 - Twitter
+        + first_name: "Кондратьев" (required, string)
+        + second_name: "Евгений" (required, string)
+        + patronymic_name: "Васильевич" (required, string)
+        + date_of_birth: 1439296986 (number) - Дата рождения
+        + phone: "380955039467" (required, string)
+        + email (string) - Почта
+        + messanger_type (required, enum[number]) - Предпочтительный тип связи
+            + Members
+                + 0 - Skype
+                + 1 - Viber
+        + messanger_number (required, string) - Номер мессенджера        
+        + photo (string) - Фотография пользователя в формате Base64
+        + legal_status: 0 (required, enum[number])
+            + Members
+                + 0 - Физ. лицо
+                + 1 - Юр. лицо
+        + company_name: 'Сити Центр'(string) 
+        + address: 'Советская ул, 12, Херсон, Херсонская область, Украина' (string)
+        + address_longitude: 32.635525 (number) - Адрес, широта
+        + address_latitude: 46.644216 (number) - Адрес, долгота
+        + gender: 0 (enum[number]) - Пол
+            + Members
+                + 0 - мужской
+                + 1 - женский
+        + work_schedule (enum[number]) - График работы
+            + Members
+                + 0 - Частичная занятость
+                + 1 - Полная занятость
+        + driving_experience - Водительский стаж кол. лет
+        + driving_category (string) - Водительские категории
+        + passport_series (string) - Серия паспорта
+        + passport_id (string) - Номер паспорта
+        + identification_code (string) - Идентификационный код
+        + first_driving_license_photo (string) - Фото водительского удостоверения в формате Base64
+        + second_driving_license_photo (string) - Фото водительского удостоверения в формате Base64
+        + password (string) - Пароль для входа в систему
+        + payment_system: 0 (enum[number]) - Платежная система
+            + Members
+                + 0 - Privat 24
+                + 1 - Pay pall
+                + 2 - AliPay
+                + 3 - TenPay
+                + 4 - Visa
+                + 5 - Mastercard
+        + card_number (string) - Номер платежной карты
+        + vehicle_information (object) - Информация о машине
+            + model (required, string) - Марка
+            + name (required, string) - Название
+            + type (required, enum[number]) - Тип автомобиля
+                + Members
+                    + 0 - Фургон пассажир
+                    + 1 - Микроавтобус грузовой
+                    + 2 - Шасси (борт, фургон)
+                    + 3 - Самосвал
+            + build_year (number) - Год выпуска, миллисекунды
+            + state_number (required, string) - Гос. номер
+            + photos (array[string]) - Фотографии автомобиля в формате Base64
+            + has_insurance (boolean) - Наличие страховки
+            + carrying (required, number) - Грузоподъемность, кг.
+            + external_vehicle_size - Габариты автомобиля
+                + height - Высота
+                + width - Ширина
+                + length - Длина
+            + internal_vehicle_size - Внутринние габариты автомобиля
+                + height - Высота
+                + width - Ширина
+                + length - Длина
+            + capacity (number) - Внутренний объем, м. куб.    
+            + units_system (required, enum[number])
+                + Members
+                    + 0 - Метричиская (мм/см/кв.см/км/кг/гр/тонна)
+                    + 1 - Английская/Американская (дюйм/фут/ярд/миля/унция/фунт)
+            + units (required, enum[number])
+                + Members
+                    + 0 - Миллиметры
+                    + 1 - Сантиметры
+                    + 2 - Метры
+        
+    + Body            
+
+            {
+                "uid":4563,
+                "user_type":2,
+                "social_id": "1200",
+                "social":0, 
+                "first_name":"Кондратьев", 
+                "second_name":"Евгений",
+                "patronymic_name":"Васильевич",
+                "date_of_birth":1439296986,
+                "phone":"380955039467", 
+                "email":"email@gmail.com",
+                "messanger_type":0,
+                "messanger_number":"number",
+                "photo":"...",
+                "legal_status":0, 
+                "company_name":"Сити Центр",
+                "address":"Советская ул, 12, Херсон, Херсонская область, Украина",
+                "address_longitude":32.635525,
+                "address_latitude":46.644216,
+                "contactTo":0, 
+                "gender":0, 
+                "work_schedule":1,
+                "driving_experience":8,
+                "driving_category":"A,B,C",
+                "passport_series":"МО",
+                "passport_id":165156, 
+                "identification_code":1111111111,
+                "first_driving_license_photo:"...",
+                "second_driving_license_photo:"...",
+                "password":"xxxx",
+                "payment_system":0,
+                "card_number":123456790123456,
+                "vehicle_information":{
+                    "model":"Ford",
+                    "name":"Transit",
+                    "type":1,
+                    "build_year":1439296986000,
+                    "state_number":"AA5676KA",
+                    "photos":["...","..."],
+                    "has_insurance":true,
+                    "carrying":1500,
+                    "external_vehicle_size":{
+                                                "height":1000,
+                                                "width":500,
+                                                "length":2000
+                                            },
+                    "internal_vehicle_size":{
+                                    "height":1200,
+                                    "width":600,
+                                    "length":2500
+                                },
+                    "capacity:1.8,
+                    "units_system":0,
+                    "units":0
+                }
+            }
+            
++ Response 200 (application/json)
+
+        {
+            "access_token":"4563jh3434hkg",
+            "success":true,
+            "errors":[]
+        }            
+        
+## Авторизация [POST /login] 
+
++ Request 
+
+    + Attributes
+        
+        + email (required, string) - Логин (почта)
+        + password (required, string) - Пароль
+            
++ Response 200 (application/json)
+
+ + Attributes
+    
+        + access_token (string) - Токен доступа к данным
+
+    + Body           
+
+            {
+                "access_token":"4563jh3434hkg",
+                "first_name":"Кондратьев",
+                "second_name":"Евгений",
+                "patronymic_name":"Васильевич",
+                "phone":"380955039467",
+                "email":"email@gmail.com",
+                "messanger_type":0,
+                "messanger_number":"skypeName",
+                "photo":"http://lester.ua/api/download/dlv24/performer.jpg",
+                "legal_status":0,
+                "company_name":"Сити Центр", 
+                "address":"ул. Советская, 12", 
+                "address_longitude":32.635525,
+                "address_latitude":46.644216,
+                "gender":0,
+                "success":true,
+                "errors":[]
+            }
+            
+## Авторизация через соц. сеть [POST /login_social]
+    
+    + Attributes
+    
+        + social_id: "1200554523" (string) - идентификатор в соц. сети
+        + social: 0 (enum[number]) - через какую соц. сеть зарегистрировался пользователь
+            + Members
+                + 0 - Facebook
+                + 1 - Renren
+                + 2 - Twitter
+                
++ Response 200 (application/json)
+
+    + Attributes
+        
+        + has_registered (boolean) - Пользователь уже зарегистрирован 
+        + access_token (string) - Токен доступа к данным. Получает если зарегистрирован.
+
+    + Body   
+        
+            {   
+                "has_registered":true,
+                "access_token":"4563jh3434hkg",
+                "first_name":"Кондратьев",
+                "second_name":"Евгений",
+                "patronymic_name":"Васильевич",
+                "phone":"380955039467",
+                "email":"email@gmail.com",
+                "messanger_type":0,
+                "messanger_number":"skypeName",
+                "photo":"http://lester.ua/api/download/dlv24/performer.jpg",
+                "legal_status":0,
+                "company_name":"Сити Центр", 
+                "address":"ул. Советская, 12", 
+                "address_longitude":32.635525,
+                "address_latitude":46.644216,
+                "gender":0,
+                "success":true,
+                "errors":[]
+            } 
+
+## Выход из системы [POST /logout]
+
++ Request
+    
+    + Headers
+        
+            Accept: "application/json"
+            Authorization: access_token
+
++ Response 200 (application/json)
+
+    [Response][]
+
+## Восстановление пароля [GET /recover_pass_validate{?email}]
+
++ Parameters
+
+    + email: "email@gmail.com" (required, string) - Почта
+      
++ Response 200 (application/json)
+
+        {
+            "success":true,
+            "errors":[]    
+        }
+
+## Проверка кода для завершения восстановления пароля [GET /recover_pass{?email,code,password}]
+
++ Parameters
+
+    + email: "email@gmail.com" (required, string) - Почта
+    + code: "Q5UD4" (required, string) - Код для подтверждения
+    + password (required, string) - Новый пароль
+     
++ Response 200 (application/json)
+
+        {
+            "success":true,
+            "errors":[]    
+        }
+
+## Group Заказчик
+### Получить характеристики груза [GET /get_goods_characteristics]
+
++ Request
+    
+    + Headers
+        
+            Accept: "application/json"
+            Authorization: access_token
 
 + Response 200 (application/json)
 
         {
-            "questions_url": "/questions"
+            "characteristics":[
+                                {
+                                    "id":12,
+                                    "title":"Осторожно хрупкое",
+                                    "icon":"https://domain/goods_characteristics/fragile.png"
+                                },
+                                {
+                                    "id":13,
+                                    "title":"Верх",
+                                    "icon":"https://domain/goods_characteristics/up.png"
+                                },
+                              ]
+            "success":true,
+            "errors":[]     
         }
-
-## Group Question
-
-Resources related to questions in the API.
-
-## Question [/questions/{question_id}]
-
-A Question object has the following attributes:
-
-+ question
-+ published_at - An ISO8601 date when the question was published.
-+ url
-+ choices - An array of Choice objects.
-
-+ Parameters
-    + question_id (required, number, `1`) ... ID of the Question in form of an integer
-
-### View a Questions Detail [GET]
-
-+ Response 200 (application/json)
-
-                {
-                    "question": "Favourite programming language?",
-                    "published_at": "2014-11-11T08:40:51.620Z",
-                    "url": "/questions/1",
-                    "choices": [
-                        {
-                            "choice": "Swift",
-                            "url": "/questions/1/choices/1",
-                            "votes": 2048
-                        }, {
-                            "choice": "Python",
-                            "url": "/questions/1/choices/2",
-                            "votes": 1024
-                        }, {
-                            "choice": "Objective-C",
-                            "url": "/questions/1/choices/3",
-                            "votes": 512
-                        }, {
-                            "choice": "Ruby",
-                            "url": "/questions/1/choices/4",
-                            "votes": 256
-                        }
-                    ]
-                }
-
-## Choice [/questions/{question_id}/choices/{choice_id}]
-
-+ Parameters
-    + question_id (required, number, `1`) ... ID of the Question in form of an integer
-    + choice_id (required, number, `1`) ... ID of the Choice in form of an integer
-
-### Vote on a Choice [POST]
-
-This action allows you to vote on a question's choice.
-
-+ Response 201
-
-    + Headers
-
-            Location: /questions/1
-
-## Questions Collection [/questions{?page}]
-
-+ Parameters
-    + page (optional, number, `1`) ... The page of questions to return
-
-### List All Questions [GET]
-
-+ Response 200 (application/json)
-
-    + Headers
-
-            Link: </questions?page=2>; rel="next"
-
-    + Body
-
-            [
-                {
-                    "question": "Favourite programming language?",
-                    "published_at": "2014-11-11T08:40:51.620Z",
-                    "url": "/questions/1",
-                    "choices": [
-                        {
-                            "choice": "Swift",
-                            "url": "/questions/1/choices/1",
-                            "votes": 2048
-                        }, {
-                            "choice": "Python",
-                            "url": "/questions/1/choices/2",
-                            "votes": 1024
-                        }, {
-                            "choice": "Objective-C",
-                            "url": "/questions/1/choices/3",
-                            "votes": 512
-                        }, {
-                            "choice": "Ruby",
-                            "url": "/questions/1/choices/4",
-                            "votes": 256
-                        }
-                    ]
-                }
-            ]
-
-### Create a New Question [POST]
-
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
-
-+ question (string) - The question
-+ choices (array[string]) - A collection of choices.
+        
+### Создать заказ [POST /create_order]
 
 + Request (application/json)
 
+    + Headers
+        
+            Accept: "application/json"
+            Authorization: access_token
+
+    + Attributes (object)
+            
+        + dispatch_address (required, string) - Откуда (начало доставки)
+        + delivery_address (required, string) - Куда (конец доставки)
+        + dispatch_latitude (required, number) - Широта
+        + dispatch_longitude (required, number) - Долгота
+        + delivery_latitude (required, number) - Широта
+        + delivery_longitude (required, number) - Долгота
+        + distance (required, number) - Расстояние между адресами (приблизительное) - км
+        + recipient_phone (required, string) - Номер моб.телефона принимающей стороны
+        + recipient_photo (required, string) - Фото принимающей стороны (адресс к фото), в формате Base64
+        + recipient_first_name (required, string) - Имя принимающей стороны
+        + recipient_second_name (required, string) - Фамилия принимающей стороны
+        + recipient_gender: 0 (enum[number]) - Пол
+            + Members
+                + 0 - Мужской
+                + 1 - Женский
+        + comment (required, string) - Комментарий
+        + passenger_count (required, number) - Колличество пассажиров
+        + service_type: 0 (enum[number]) - Тип услуги (курьер, груз.машина)
+            + Members
+                + 0 - Курьер
+                + 1 - Груз.машина
+        + goods_loader: 0 (enum[number]) - Погрузчик
+            + Members
+                + 0 - Заказчик
+                + 1 - Перевозчик
+        + goods_unloader: 0 (enum[number]) - Разгрузчик
+            + Members
+                + 0 - Заказчик
+                + 1 - Перевозчик
+        + goods_load_timestamp (required, number) - Время погрузки в миллисекундах
+        + estimated_delivery_timestamp (required, number) - Приблизительное время доставки
+        + summary_goods_capacity (required, number) - Общий объем груза
+        + summary_goods_weight (required, number) - Общий вес груза
+        + summary_goods_count (required, number) - Общее кол-во мест
+        + goods_delivery_cost (required, number) - Стоимость перевозки
+        + goods (required, array) - Список грузов
+            + name (required, string) - Наименование груза
+            + length (required, number) - Длина
+            + width (required, number) - Ширина
+            + height (required, number) - Высота
+            + weight (required, number) - Вес
+            + count (required, number) - Количество
+            + is_packed (required, boolean) - Груз упакован
+            + units_system (required, enum[number])
+                + Members
+                    + 0 - Метричиская (мм/см/кв.см/км/кг/гр/тонна)
+                    + 1 - Английская/Американская (дюйм/фут/ярд/миля/унция/фунт)
+            + units (required, enum[number])
+                + Members
+                    + 0 - Миллиметры
+                    + 1 - Сантиметры
+                    + 2 - Метры
+        + goods_characteristics (array[number]) - Характеристики для перевозки грузов
+        + payment_data - Платежные данные
+            + payment_system (required, enum[number]) - Платежная система
+                + Members
+                    + 0 - Privat 24
+                    + 1 - Pay pall
+                    + 2 - AliPay
+                    + 3 - TenPay
+                    + 4 - Visa
+                    + 5 - Mastercard
+        + calc_cost (required, boolean) - Рассчитать стоимость заказа
+
+    + Body
+    
             {
-                "question": "Favourite programming language?",
-                "choices": [
-                    "Swift",
-                    "Python",
-                    "Objective-C",
-                    "Ruby"
-                ]
+                "dispatch_address":"Херсон, ул. Херсонская, 12",
+                "dispatch_latitude":46.645004,
+                "dispatch_longitude":32.635525,
+                "distance":11,
+                "comment":"Очень хрупкий товар",
+                "passenger_count":1,
+                "service_type":0,
+                "goods_loader":0,
+                "goods_load_timestamp":1439296986,
+                "estimated_delivery_timestamp":1439296986,
+                "goods_delivery_cost":257.57,
+                "applications":[
+                                    {
+                                        "recipient_first_name":"Андрей",
+                                        "recipient_second_name":"Шелохов",
+                                        "recipient_phone":"80955065457",
+                                        "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                        "delivery_latitude":46.644216,
+                                        "delivery_longitude":32.630965,
+                                        "goods":[
+                                                    {
+                                                        "name":"Шкаф, шкаф",
+                                                        "length":50,
+                                                        "width":60, 
+                                                        "height":63,
+                                                        "weight":25,
+                                                        "count":2,
+                                                        "is_packed":true,
+                                                        "units_system":0,
+                                                        "units":0,
+                                                        "goods_unloader":1,
+                                                        "goods_characteristics":[0,1,2]
+                                                    }
+                                                ]
+                                    }
+                ],
+                "payment_data":{
+                                    "payment_system":0
+                                },
+                "calc_cost":false
+            }
+            
++ Response 200 (application/json)
+
+    + Attributes (object)
+        
+        + order_id: 4563 (required, number) - Идентификатор заказа
+        + estimated_distance (number) - Предполагаемое расстояние в километрах
+        + estimated_delivery_time (number) - Приблизительное время доставки в часах
+        + recommended_cost (number) - Рекомендованная цена
+        + commission (number) - Комиссия
+        + currency (string) - Валюта
+        + route (string) - Оптимальный маршрут для отображения на карте в формате Base64
+        
+    + Body
+    
+            {
+                "order_id":4563,
+                "estimated_distance":52,
+                "estimated_delivery_time":120,
+                "recommended_cost":125.0,
+                "commission":7.50,
+                "currency":"UAH",
+                "route":"...",
+                "success": true,
+                "errors": []
+            }            
+
+### Получить список подписанных исполнителей на заказы [GET /get_subscribed_performers]
+
++ Request
+    
+    + Headers
+        
+            Accept: "application/json"
+            Authorization: access_token
+    
++ Response 200 (application/json)
+
+    + Attributes
+        
+        + orders (array[number]) - Массив заказов пользователя
+        + performers (array[object]) - Массив подписанных исполнителей. Поля смотрите в запросе /performer_info 
+        
+    + Body
+    
+            {
+                "orders":[
+                            {
+                                "order_id":4563,
+                                "performers":[]
+                            }
+                        ],
+                "success": true,
+                "errors": []    
             }
 
-+ Response 201 (application/json)
+
+### Получить все заказы заказчика [GET /get_customer_orders]
+
++ Request
+    
+    + Headers
+        
+            Accept: "application/json"
+            Authorization: access_token
+    
++ Response 200 (application/json)
+    
+    + Attributes
+        
+        + performer_name (string) - Имя исполнителя
+        + performer_id (number) - Идентификатор исполнителя
+        + subscribed_performers (array[number]) - Массив подписанных исполнителей
+        + order_code (string) - Код заказа. Нужен для подтверждения доставки
+        + status (enum[number]) - Статус заказа
+            + Members
+                + 0 - Открытый
+                + 1 - В работе
+                + 2 - Не выполненный
+                + 3 - Завершенный
+                + 4 - Черновик
+        + comment (string) - Комментарий если возникли проблемы
+        + published_date (required, number) - Дата публикации
+        + completion_date (number) - Дата выполнениния заказа
+    
+    + Body
+    
+            {
+                "success": true,
+                "errors": [],
+                "orders":[
+                            {   
+                                "order_id":4553,
+                                "performer_name":"Михаил",
+                                "performer_id":1212,
+                                "order_code":"132739AG",
+                                "subscribed_performers":[456,7896,785],
+                                "status":1,
+                                "dispatch_address":"Херсон, ул. Херсонская, 12",
+                                "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                "dispatch_latitude":46.645004,
+                                "dispatch_longitude":32.635525,
+                                "delivery_latitude":46.644216,
+                                "delivery_longitude":32.630965,
+                                "distance":11,
+                                "performer":
+                                            {
+                                                "first_name":"Артур",
+                                                "second_name":"Радионов",
+                                                "patronymic_name":"Антонович",
+                                                "phone":"80955065456",
+                                                "photo":"http://lester.ua/api/download/dlv24/performer.jpg",
+                                                "gender":0,
+                                                "messanger_type":0,
+                                                "messanger_number":"skype:number"
+                                            },
+                                "recipient":
+                                            {
+                                                "first_name":"Андрей",
+                                                "second_name":"Шелохов",
+                                                "patronymic_name":"Сергеевич",
+                                                "phone":"80955065457",
+                                                "photo":"http://lester.ua/api/download/dlv24/driver.png",
+                                                "gender":1,
+                                                "messanger_type":1,
+                                                "messanger_number":"viber:number"
+                                            },
+                                "recipient_phone":"80955065457",
+                                "recipient_photo":"...",
+                                "recipient_first_name":"Андрей",
+                                "recipient_second_name":"Шелохов",
+                                "recipient_gender":0,
+                                "comment":"Очень хрупкий товар",
+                                "passenger_count":1,
+                                "service_type":0,
+                                "goods_loader":0,
+                                "goods_unloader":1,
+                                "goods_load_timestamp":1449296986,
+                                "estimated_delivery_timestamp":1439356986,
+                                "summary_goods_capacity":25,
+                                "summary_goods_weight":50,
+                                "summary_goods_count":2,
+                                "goods_delivery_cost":257.57,
+                                "goods":[
+                                            {
+                                                "name":"Инструменты",
+                                                "length":50,
+                                                "width":60, 
+                                                "height":63,
+                                                "weight":25,
+                                                "count":2,
+                                                "is_packed":true,
+                                                "units_system":0,
+                                                "units":0
+                                            }
+                                        ],
+                                "goods_characteristics":[1,2,3,4],
+                                "estimated_distance":52,
+                                "estimated_delivery_time":120,
+                                "recommended_cost":125.0,
+                                "commission":7.50,
+                                "currency":"UAH",
+                                "comment":"Груз был доставлен но не того цвета",
+                                "route":"...",
+                                "published_date":1439289986,
+                                "completion_date":1439299986
+                            },
+                            {   
+                                "order_id":4554,
+                                "performer_name":"Михаил",
+                                "performer_id":1212,
+                                "order_code":"132739AG",
+                                "subscribed_performers":[7887,87854,5454],
+                                "status":2,
+                                "dispatch_address":"Херсон, ул. Херсонская, 12",
+                                "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                "dispatch_latitude":46.645004,
+                                "dispatch_longitude":32.635525,
+                                "delivery_latitude":46.644216,
+                                "delivery_longitude":32.630965,
+                                "distance":11,
+                                "recipient_phone":"80955065457",
+                                "recipient_photo":"...",
+                                "recipient_first_name":"Андрей",
+                                "recipient_second_name":"Шелохов",
+                                "recipient_gender":0,
+                                "comment":"Очень хрупкий товар",
+                                "passenger_count":1,
+                                "service_type":0,
+                                "goods_loader":0,
+                                "goods_unloader":1,
+                                "goods_load_timestamp":1439366986,
+                                "estimated_delivery_timestamp":1449256986,
+                                "summary_goods_capacity":25,
+                                "summary_goods_weight":50,
+                                "summary_goods_count":2,
+                                "goods_delivery_cost":257.57,
+                                "goods":[
+                                            {
+                                                "name":"Инструменты",
+                                                "length":50,
+                                                "width":60, 
+                                                "height":63,
+                                                "weight":25,
+                                                "count":2,
+                                                "is_packed":true,
+                                                "units_system":0,
+                                                "units":0
+                                            }
+                                        ],
+                                "goods_characteristics":[1,2,3],
+                                "estimated_distance":52,
+                                "estimated_delivery_time":120,
+                                "recommended_cost":125.0,
+                                "commission":7.50,
+                                "currency":"UAH",
+                                "comment":"Груз был доставлен но не того цвета",
+                                "route":"...",
+                                "published_date":1459289986,
+                                "completion_date":1439699986
+                            },
+                            {   
+                                "order_id":4555,
+                                "performer_name":"Михаил",
+                                "performer_id":1212,
+                                "order_code":"132739AG",
+                                "subscribed_performers":[7878,5457,9894],
+                                "status":3,
+                                "dispatch_address":"Херсон, ул. Херсонская, 12",
+                                "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                "dispatch_latitude":46.645004,
+                                "dispatch_longitude":32.635525,
+                                "delivery_latitude":46.644216,
+                                "delivery_longitude":32.630965,
+                                "distance":11,
+                                "recipient_phone":"80955065457",
+                                "recipient_photo":"...",
+                                "recipient_first_name":"Андрей",
+                                "recipient_second_name":"Шелохов",
+                                "recipient_gender":0,
+                                "comment":"Очень хрупкий товар",
+                                "passenger_count":1,
+                                "service_type":0,
+                                "goods_loader":0,
+                                "goods_unloader":1,
+                                "goods_load_timestamp":1438696986,
+                                "estimated_delivery_timestamp":1433696986,
+                                "summary_goods_capacity":25,
+                                "summary_goods_weight":50,
+                                "summary_goods_count":2,
+                                "goods_delivery_cost":257.57,
+                                "goods":[
+                                            {
+                                                "name":"Инструменты",
+                                                "length":50,
+                                                "width":60, 
+                                                "height":63,
+                                                "weight":25,
+                                                "count":2,
+                                                "is_packed":true,
+                                                "units_system":0,
+                                                "units":0
+                                            }
+                                        ],
+                                "goods_characteristics":[1,2,3],
+                                "estimated_distance":52,
+                                "estimated_delivery_time":120,
+                                "recommended_cost":125.0,
+                                "commission":7.50,
+                                "currency":"UAH",
+                                "comment":"Груз был доставлен но не того цвета",
+                                "route":"...",
+                                "published_date":1439289986,
+                                "completion_date":1439299986
+                            },
+                            {   
+                                "order_id":4556,
+                                "performer_name":"Михаил",
+                                "performer_id":1212,
+                                "order_code":"132739AG",
+                                "subscribed_performers":[4578],
+                                "status":0,
+                                "dispatch_address":"Херсон, ул. Херсонская, 12",
+                                "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                "dispatch_latitude":46.645004,
+                                "dispatch_longitude":32.635525,
+                                "delivery_latitude":46.644216,
+                                "delivery_longitude":32.630965,
+                                "distance":11,
+                                "recipient_phone":"80955065457",
+                                "recipient_photo":"...",
+                                "recipient_first_name":"Андрей",
+                                "recipient_second_name":"Шелохов",
+                                "recipient_gender":0,
+                                "comment":"Очень хрупкий товар",
+                                "passenger_count":1,
+                                "service_type":0,
+                                "goods_loader":0,
+                                "goods_unloader":1,
+                                "goods_load_timestamp":1439256986,
+                                "estimated_delivery_timestamp":1431096986,
+                                "summary_goods_capacity":25,
+                                "summary_goods_weight":50,
+                                "summary_goods_count":2,
+                                "goods_delivery_cost":257.57,
+                                "goods":[
+                                            {
+                                                "name":"Инструменты",
+                                                "length":50,
+                                                "width":60, 
+                                                "height":63,
+                                                "weight":25,
+                                                "count":2,
+                                                "is_packed":true,
+                                                "units_system":0,
+                                                "units":0
+                                            }
+                                        ],
+                                "goods_characteristics":[1,2,3],
+                                "estimated_distance":52,
+                                "estimated_delivery_time":120,
+                                "recommended_cost":125.0,
+                                "commission":7.50,
+                                "currency":"UAH",
+                                "comment":"Груз был доставлен но не того цвета",
+                                "route":"...",
+                                "published_date":1440289986,
+                                "completion_date":1439299986
+                            },
+                            {   
+                                "order_id":4557,
+                                "performer_name":"Михаил",
+                                "performer_id":1212,
+                                "order_code":"132739AG",
+                                "subscribed_performers":[4511,212],
+                                "status":0,
+                                "dispatch_address":"Херсон, ул. Херсонская, 12",
+                                "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                "dispatch_latitude":46.645004,
+                                "dispatch_longitude":32.635525,
+                                "delivery_latitude":46.644216,
+                                "delivery_longitude":32.630965,
+                                "distance":11,
+                                "recipient_phone":"80955065457",
+                                "recipient_photo":"...",
+                                "recipient_first_name":"Андрей",
+                                "recipient_second_name":"Шелохов",
+                                "recipient_gender":0,
+                                "comment":"Очень хрупкий товар",
+                                "passenger_count":1,
+                                "service_type":0,
+                                "goods_loader":0,
+                                "goods_unloader":1,
+                                "goods_load_timestamp":1439296986,
+                                "estimated_delivery_timestamp":1439296986,
+                                "summary_goods_capacity":25,
+                                "summary_goods_weight":50,
+                                "summary_goods_count":2,
+                                "goods_delivery_cost":257.57,
+                                "goods":[
+                                            {
+                                                "name":"Инструменты",
+                                                "length":50,
+                                                "width":60, 
+                                                "height":63,
+                                                "weight":25,
+                                                "count":2,
+                                                "is_packed":true,
+                                                "units_system":0,
+                                                "units":0
+                                            }
+                                        ],
+                                "goods_characteristics":[3],
+                                "estimated_distance":52,
+                                "estimated_delivery_time":120,
+                                "recommended_cost":125.0,
+                                "commission":7.50,
+                                "currency":"UAH",
+                                "comment":"Груз был доставлен но не того цвета",
+                                "route":"...",
+                                "published_date":1439289986,
+                                "completion_date":1439299986
+                            },
+                            {   
+                                "order_id":4558,
+                                "performer_name":"Михаил",
+                                "performer_id":1212,
+                                "order_code":"132739AG",
+                                "subscribed_performers":[878,5454,787],
+                                "status":0,
+                                "dispatch_address":"Херсон, ул. Херсонская, 12",
+                                "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                "dispatch_latitude":46.645004,
+                                "dispatch_longitude":32.635525,
+                                "delivery_latitude":46.644216,
+                                "delivery_longitude":32.630965,
+                                "distance":11,
+                                "recipient_phone":"80955065457",
+                                "recipient_photo":"...",
+                                "recipient_first_name":"Андрей",
+                                "recipient_second_name":"Шелохов",
+                                "recipient_gender":0,
+                                "comment":"Очень хрупкий товар",
+                                "passenger_count":1,
+                                "service_type":0,
+                                "goods_loader":0,
+                                "goods_unloader":1,
+                                "goods_load_timestamp":1439296986,
+                                "estimated_delivery_timestamp":1439296986,
+                                "summary_goods_capacity":25,
+                                "summary_goods_weight":50,
+                                "summary_goods_count":2,
+                                "goods_delivery_cost":257.57,
+                                "goods":[
+                                            {
+                                                "name":"Инструменты",
+                                                "length":50,
+                                                "width":60, 
+                                                "height":63,
+                                                "weight":25,
+                                                "count":2,
+                                                "is_packed":true,
+                                                "units_system":0,
+                                                "units":0
+                                            }
+                                        ],
+                                "goods_characteristics":[1,2,3],
+                                "estimated_distance":52,
+                                "estimated_delivery_time":120,
+                                "recommended_cost":125.0,
+                                "commission":7.50,
+                                "currency":"UAH",
+                                "comment":"Груз был доставлен но не того цвета",
+                                "route":"...",
+                                "published_date":1439289986,
+                                "completion_date":1439299986
+                            },
+                             {   
+                                "order_id":4559,
+                                "performer_name":"Михаил",
+                                "performer_id":1212,
+                                "order_code":"132739AG",
+                                "subscribed_performers":[787,8785],
+                                "status":0,
+                                "dispatch_address":"Херсон, ул. Херсонская, 12",
+                                "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                "dispatch_latitude":46.645004,
+                                "dispatch_longitude":32.635525,
+                                "delivery_latitude":46.644216,
+                                "delivery_longitude":32.630965,
+                                "distance":11,
+                                "recipient_phone":"80955065457",
+                                "recipient_photo":"...",
+                                "recipient_first_name":"Андрей",
+                                "recipient_second_name":"Шелохов",
+                                "recipient_gender":0,
+                                "comment":"Очень хрупкий товар",
+                                "passenger_count":1,
+                                "service_type":0,
+                                "goods_loader":0,
+                                "goods_unloader":1,
+                                "goods_load_timestamp":1425296986,
+                                "estimated_delivery_timestamp":1439296986,
+                                "summary_goods_capacity":25,
+                                "summary_goods_weight":50,
+                                "summary_goods_count":2,
+                                "goods_delivery_cost":257.57,
+                                "goods":[
+                                            {
+                                                "name":"Инструменты",
+                                                "length":50,
+                                                "width":60, 
+                                                "height":63,
+                                                "weight":25,
+                                                "count":2,
+                                                "is_packed":true,
+                                                "units_system":0,
+                                                "units":0
+                                            }
+                                        ],
+                                "goods_characteristics":[1,2,3],
+                                "estimated_distance":52,
+                                "estimated_delivery_time":120,
+                                "recommended_cost":125.0,
+                                "commission":7.50,
+                                "currency":"UAH",
+                                "comment":"Груз был доставлен но не того цвета",
+                                "route":"...",
+                                "published_date":1439289986,
+                                "completion_date":1439299986
+                            },
+                             {   
+                                "order_id":4561,
+                                "performer_name":"Михаил",
+                                "performer_id":1212,
+                                "order_code":"132739AG",
+                                "subscribed_performers":[7887,5454,545,5454],
+                                "status":0,
+                                "dispatch_address":"Херсон, ул. Херсонская, 12",
+                                "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                "dispatch_latitude":46.645004,
+                                "dispatch_longitude":32.635525,
+                                "delivery_latitude":46.644216,
+                                "delivery_longitude":32.630965,
+                                "distance":11,
+                                "recipient_phone":"80955065457",
+                                "recipient_photo":"...",
+                                "recipient_first_name":"Андрей",
+                                "recipient_second_name":"Шелохов",
+                                "recipient_gender":0,
+                                "comment":"Очень хрупкий товар",
+                                "passenger_count":1,
+                                "service_type":0,
+                                "goods_loader":0,
+                                "goods_unloader":1,
+                                "goods_load_timestamp":1439296986,
+                                "estimated_delivery_timestamp":1439296986,
+                                "summary_goods_capacity":25,
+                                "summary_goods_weight":50,
+                                "summary_goods_count":2,
+                                "goods_delivery_cost":257.57,
+                                "goods":[
+                                            {
+                                                "name":"Инструменты",
+                                                "length":50,
+                                                "width":60, 
+                                                "height":63,
+                                                "weight":25,
+                                                "count":2,
+                                                "is_packed":true,
+                                                "units_system":0,
+                                                "units":0
+                                            }
+                                        ],
+                                "goods_characteristics":[1,2,3],
+                                "estimated_distance":52,
+                                "estimated_delivery_time":120,
+                                "recommended_cost":125.0,
+                                "commission":7.50,
+                                "currency":"UAH",
+                                "comment":"Груз был доставлен но не того цвета",
+                                "route":"...",
+                                "published_date":1439289986,
+                                "completion_date":1439299986
+                            },
+                             {   
+                                "order_id":4560,
+                                "performer_name":"Михаил",
+                                "performer_id":1212,
+                                "order_code":"132739AG",
+                                "subscribed_performers":[45456,87845,8754],
+                                "status":4,
+                                "dispatch_address":"Херсон, ул. Херсонская, 12",
+                                "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                "dispatch_latitude":46.645004,
+                                "dispatch_longitude":32.635525,
+                                "delivery_latitude":46.644216,
+                                "delivery_longitude":32.630965,
+                                "distance":11,
+                                "recipient_phone":"80955065457",
+                                "recipient_photo":"...",
+                                "recipient_first_name":"Андрей",
+                                "recipient_second_name":"Шелохов",
+                                "recipient_gender":0,
+                                "comment":"Очень хрупкий товар",
+                                "passenger_count":1,
+                                "service_type":0,
+                                "goods_loader":0,
+                                "goods_unloader":1,
+                                "goods_load_timestamp":1439296986,
+                                "estimated_delivery_timestamp":1439296986,
+                                "summary_goods_capacity":25,
+                                "summary_goods_weight":50,
+                                "summary_goods_count":2,
+                                "goods_delivery_cost":257.57,
+                                "goods":[
+                                            {
+                                                "name":"Инструменты",
+                                                "length":50,
+                                                "width":60, 
+                                                "height":63,
+                                                "weight":25,
+                                                "count":2,
+                                                "is_packed":true,
+                                                "units_system":0,
+                                                "units":0
+                                            }
+                                        ],
+                                "goods_characteristics":[1,2,3],
+                                "estimated_distance":52,
+                                "estimated_delivery_time":120,
+                                "recommended_cost":125.0,
+                                "commission":7.50,
+                                "currency":"UAH",
+                                "comment":"Груз был доставлен но не того цвета",
+                                "route":"...",
+                                "published_date":1439256986,
+                                "completion_date":1456299986
+                            }
+                         ]
+            }
+
+### Удалить заказ [POST /delete_order]
+
++ Request
+    
+    + Headers
+        
+            Accept: "application/json"
+            Authorization: access_token
+
++ Attributes
+
+    + order_id (required, number) - Идентификатор заказа
+    
++ Response 200 (application/json)
+
+    [Response][]
+    
+### Подтвердить исполнителя для выполнения заказа [POST /approve_performer]
+
++ Request
+    
+    + Headers
+        
+            Accept: "application/json"
+            Authorization: access_token
+
+    + Attributes
+        + performer_id (required,number) - Идентификатор исполнителя
+        + order_id (required,number) - Идентификатор заказа
+
++ Response 200 (application/json)
+
+    [Response][]        
+
+### Получить статус выполнения заказа [GET /order_status{?order_id}]
+
++ Response 200 (application/json)
+    
+    + Attributes
+        
+        + current_longitude (number) - Текущая широта перевозчика
+        + current_latitude (number) - Текущая долгото перевозчика
+        + stages
+            + stage (enum[number]) - Этапы перевозки
+                + Members
+                    + 0 - Приступил к выполнению
+                    + 1 - Груз загружен
+                    + 2 - Груз разгружен
+            + date - Время начала этапа
+        
+    + Body  
+                
+            {
+                "current_longitude":32.635525,
+                "current_latitude":46.644216,
+                "stages":[
+                            {
+                                "stage":0,
+                                "date":1439299986
+                            }, 
+                            {
+                                "stage":1,
+                                "date":1439399986
+                            }
+                        ],
+                "success": true,
+                "errors": []
+            }
+    
+### Оставить отзыв [POST /send_feedback]
+
++ Request
+    
+    + Headers
+        
+            Accept: "application/json"
+            Authorization: access_token
+
+    + Attributes
+    
+        + order_id (required, number) - Идентификатор заказа 
+        + message (required, string) - Отзыв
+        + rating (required, number) - Рейтинг (1-10)
+
++ Response 200 (application/json)
+
+    [Response][]
+    
+### Редактировать данные пользователя [POST /edit_person_data]
+
++ Request Редактировать данные заказчика
 
     + Headers
+        
+            Accept: "application/json"
+            Authorization: access_token
 
-            Location: /questions/2
+    + Attributes (object)
+
+        + first_name: "Кондратьев" (required, string)
+        + second_name: "Евгений" (required, string)
+        + patronymic_name: "Васильевич"(string)
+        + photo (string) - фотография пользователя в формате Base64
+        + address: "ул. Советская, 12" (string) - Адрес
+        + address_longitude: 32.635525 (number) - Адрес, широта
+        + address_latitude: 46.644216 (number) - Адрес, долгота
+        + gender: 0 (enum[number]) - Пол
+            + Members
+                + 0 - Мужской
+                + 1 - Женский
+        + phone: "380955039467" (required, string)
+        + email (string) - Почта
+        + messanger_type (required, enum[number]) - Предпочтительный тип связи
+            + Members
+                + 0 - Skype
+                + 1 - Viber
+        + messanger_number (required, string) - Номер мессенджера                
+
++ Request Редактировать данные исполнителя
+
+    + Headers
+        
+            Accept: "application/json"
+            Authorization: access_token
+
+    + Attributes (object)
+
+        + first_name: "Кондратьев" (string)
+        + second_name: "Евгений" (string)
+        + patronymic_name: "Васильевич"(string)
+        + date_of_birth: 1439296986 (number) - Дата рождения
+        + driving_experience:1 - Водительский стаж кол. лет
+        + work_schedule (enum[number]) - График работы
+            + Members
+                + 0 - Частичная занятость
+                + 1 - Полная занятость
+        + phone: "380955039467" (string)
+        + email (string) - Почта
+        + messanger_type (required, enum[number]) - Предпочтительный тип связи
+            + Members
+                + 0 - Skype
+                + 1 - Viber
+        + messanger_number (required, string) - Номер мессенджера 
+        + photo (string) - фотография пользователя в формате Base64
+        + vehicle_model (string) - Марка автомобиля
+        + vehicle_name (string) - Название автомобиля
+        + vehicle_state_number (string) - Гос. номер автомобиля
+        
++ Response 200 (application/json)
+
+    [Response][]                
+
+## Group Перевозчик/курьер  
+
+### Получить заказы [GET /get_orders{?city_id,country_id,goods_capacity,goods_weight,to_route_length,from_date,to_date,from_time,to_time,filtre_by_geolocation,latitude,longitude,radius,sort_by_field,sorting_order,offset,limit}]
+
++ Request
+    
+    + Headers
+        
+            Accept: "application/json"
+            Authorization: access_token
+
++ Parameters
+
+    + city_id: 1 (number) - Идентификатор города
+    + country_id: 1 (number) - Идентификатор страны
+    + goods_capacity: 1.8 (number) - Объем груза, м. куб. 
+    + goods_weight:25 (number) - Вес груза, кг
+    + to_route_length: 80 (number) - Максимальная длина маршрута, км
+    + from_date: 1439299986 (number) - Начальная дата, миллисекунды
+    + to_date: 1439399986 (number) -Конечная дата, миллисекунды
+    + from_time: 1439299986 (number) - Начальное время, миллисекунды
+    + to_time: 1439299986 (number) - Конечное время, миллисекунды
+    + filtre_by_geolocation: true (boolean) - Искать по текущему положению с заданным радиусом
+    + latitude: 46.645004 (number) - Текущее положение, широта 
+    + longitude: 32.635525 (number) - Текущее положение, долгота
+    + radius: 10 (number) - Радиус, км
+    + sort_by_field: "published_date" (string) - Сортируемое поле (goods_delivery_cost -стоимость, distance - расстояние, goods_weight - вес, published_date - дата публикации)
+    + sorting_order: "asc" (string) - Порядок сортировки asc/desc 
+    + offset:50 (number) - смещение для заказов
+    + limit:150 (number) - количество возвращаемых заказов
+
++ Response 200 (application/json)
+    
+        {
+            "orders":[
+                        {
+                            "order_id":4563,
+                            "dispatch_address":"Херсон, ул. Херсонская, 12",
+                            "delivery_address":"Херсон, ул. Покрышева, 68А",
+                            "dispatch_latitude":46.645004,
+                            "dispatch_longitude":32.635525,
+                            "delivery_latitude":46.644216,
+                            "delivery_longitude":32.630965,
+                            "distance":11,
+                            "comment":"Очень хрупкий товар",
+                            "passenger_count":1,
+                            "service_type":0,
+                            "goods_loader":0,
+                            "goods_unloader":1,
+                            "goods_load_timestamp":1439296986,
+                            "estimated_delivery_timestamp":1439296986,
+                            "summary_goods_capacity":25,
+                            "summary_goods_weight":50,
+                            "summary_goods_count":2,
+                            "goods_delivery_cost":257.57,
+                            "goods":[
+                                        {
+                                            "name":"Инструменты, коробки",
+                                            "length":50,
+                                            "width":60, 
+                                            "height":63,
+                                            "weight":25,
+                                            "count":2,
+                                            "is_packed":true,
+                                            "units_system":0,
+                                            "units":0
+                                        }
+                                    ],
+                            "goods_characteristics":[1,2,3],
+                            "estimated_distance":52,
+                            "estimated_delivery_time":120,
+                            "recommended_cost":125.0,
+                            "commission":7.50,
+                            "currency":"UAH",
+                            "route":"...",
+                            "published_date":1439296986000
+                        },
+                        {
+                            "order_id":4575,
+                            "dispatch_address":"Херсон, ул. Херсонская, 11",
+                            "delivery_address":"Херсон, ул. Покрышева, 5А",
+                            "dispatch_latitude":45.645004,
+                            "dispatch_longitude":36.635525,
+                            "delivery_latitude":46.644216,
+                            "delivery_longitude":32.630965,
+                            "distance":16,
+                            "comment":"Очень хрупкий товар",
+                            "passenger_count":1,
+                            "service_type":0,
+                            "goods_loader":0,
+                            "goods_unloader":1,
+                            "goods_load_timestamp":1439296986,
+                            "estimated_delivery_timestamp":1439296986,
+                            "summary_goods_capacity":25,
+                            "summary_goods_weight":100,
+                            "summary_goods_count":2,
+                            "goods_delivery_cost":157.57,
+                            "goods":[
+                                        {
+                                            "name":"Инструменты, дрель, шкаф",
+                                            "length":50,
+                                            "width":60, 
+                                            "height":63,
+                                            "weight":25,
+                                            "count":2,
+                                            "is_packed":true,
+                                            "units_system":0,
+                                            "units":0
+                                        }
+                                    ],
+                            "goods_characteristics":[1,2,3],
+                            "estimated_distance":556,
+                            "estimated_delivery_time":120,
+                            "recommended_cost":525.0,
+                            "commission":7.50,
+                            "currency":"UAH",
+                            "route":"...",
+                            "published_date":1439296986
+                        },
+                        {
+                            "order_id":456,
+                            "dispatch_address":"Херсон, ул. Херсонская, 12",
+                            "delivery_address":"Херсон, ул. Покрышева, 68А",
+                            "dispatch_latitude":46.645004,
+                            "dispatch_longitude":32.635525,
+                            "delivery_latitude":46.644216,
+                            "delivery_longitude":32.630965,
+                            "distance":196,
+                            "comment":"Очень хрупкий товар",
+                            "passenger_count":1,
+                            "service_type":0,
+                            "goods_loader":0,
+                            "goods_unloader":1,
+                            "goods_load_timestamp":1439296986,
+                            "estimated_delivery_timestamp":1439296986,
+                            "summary_goods_capacity":25,
+                            "summary_goods_weight":505,
+                            "summary_goods_count":2,
+                            "goods_delivery_cost":27.57,
+                            "goods":[
+                                        {
+                                            "name":"Коробки, столы",
+                                            "length":50,
+                                            "width":60, 
+                                            "height":63,
+                                            "weight":25,
+                                            "count":2,
+                                            "is_packed":true,
+                                            "units_system":0,
+                                            "units":0
+                                        }
+                                    ],
+                            "goods_characteristics":[1,2,3],
+                            "estimated_distance":52,
+                            "estimated_delivery_time":120,
+                            "recommended_cost":125.0,
+                            "commission":7.50,
+                            "currency":"UAH",
+                            "route":"...",
+                            "published_date":1439298486000
+                        },
+                        {
+                            "order_id":1563,
+                            "dispatch_address":"Херсон, ул. Херсонская, 9",
+                            "delivery_address":"Херсон, ул. Покрышева, 68А",
+                            "dispatch_latitude":46.645004,
+                            "dispatch_longitude":32.635525,
+                            "delivery_latitude":46.644216,
+                            "delivery_longitude":32.630965,
+                            "distance":111,
+                            "comment":"Очень хрупкий товар",
+                            "passenger_count":1,
+                            "service_type":0,
+                            "goods_loader":0,
+                            "goods_unloader":1,
+                            "goods_load_timestamp":1439296986000,
+                            "estimated_delivery_timestamp":1439296986,
+                            "summary_goods_capacity":25,
+                            "summary_goods_weight":50,
+                            "summary_goods_count":2,
+                            "goods_delivery_cost":2667.57,
+                            "goods":[
+                                        {
+                                            "name":"Инструменты, кирпичи",
+                                            "length":50,
+                                            "width":60, 
+                                            "height":63,
+                                            "weight":25,
+                                            "count":2,
+                                            "is_packed":true,
+                                            "units_system":0,
+                                            "units":0
+                                        }
+                                    ],
+                            "goods_characteristics":[1,2,3],
+                            "estimated_distance":52,
+                            "estimated_delivery_time":120,
+                            "recommended_cost":1245.0,
+                            "commission":7.50,
+                            "currency":"UAH",
+                            "route":"...",
+                            "published_date":1439293986
+                        },
+                        {
+                            "order_id":45883,
+                            "dispatch_address":"Херсон, ул. Херсонская, 1",
+                            "delivery_address":"Херсон, ул. Покрышева, 68А",
+                            "dispatch_latitude":46.645004,
+                            "dispatch_longitude":32.635525,
+                            "delivery_latitude":46.644216,
+                            "delivery_longitude":32.630965,
+                            "distance":117,
+                            "comment":"Очень хрупкий товар",
+                            "passenger_count":1,
+                            "service_type":0,
+                            "goods_loader":0,
+                            "goods_unloader":1,
+                            "goods_load_timestamp":1439296986,
+                            "estimated_delivery_timestamp":1439296986,
+                            "summary_goods_capacity":25,
+                            "summary_goods_weight":5440,
+                            "summary_goods_count":2,
+                            "goods_delivery_cost":2547.57,
+                            "goods":[
+                                        {
+                                            "name":"Инструменты",
+                                            "length":50,
+                                            "width":60, 
+                                            "height":63,
+                                            "weight":25,
+                                            "count":2,
+                                            "is_packed":true,
+                                            "units_system":0,
+                                            "units":0
+                                        }
+                                    ],
+                            "goods_characteristics":[1,2,3],
+                            "estimated_distance":532,
+                            "estimated_delivery_time":120,
+                            "recommended_cost":125.0,
+                            "commission":7.50,
+                            "currency":"UAH",
+                            "route":"...",
+                            "published_date":1439298486
+                        }
+                     ],
+            "success": true,
+            "errors": []     
+        }
+                
+### Подать заявку на доставку [POST /subscribe_to_order]
+
++ Request
+    
+    + Headers
+        
+            Accept: "application/json"
+            Authorization: access_token
+    
+    + Attributes
+        
+        + order_id (required, number) - Идентификатор заказа
+        + estimated_delivery_time (number) - Предполагаемое время доставки в минутах
+
++ Response 200 (application/json)
+    
+    [Response][]        
+
+## Получить статус поданных заявок [GET /approved_orders]
+
++ Request
+    
+    + Headers
+        
+            Accept: "application/json"
+            Authorization: access_token
+   
++ Response 200 (application/json)
+
+    + Attributes
+
+        + order_id (required, number) - Идентификатор заказа
+        + approve_status (required, enum[number]) - Статус
+            + Members
+                + 0 - Принят
+                + 1 - Не принят
+        + first_name(required, string) - Имя заказчика
+        + second_name(required, string) - Фамилия заказчика
+        + patronymic_name (required, string) - Отчество заказчика
+        + phone(required, string) - Телефон заказчика
+        + photo (string) - Фотография заказчика
+        + gender: 0 (enum[number]) - Пол
+            + Members
+                + 0 - мужской
+                + 1 - женский
+        + messanger_type (required, enum[number]) - Тип мессенджера
+            + Members
+                + 0 - Skype
+                + 1 - Viber
+        + messanger_number (required, string) - Номер мессенджера        
 
     + Body
 
-                {
-                    "question": "Favourite programming language?",
-                    "published_at": "2014-11-11T08:40:51.620Z",
-                    "url": "/questions/2",
-                    "choices": [
-                        {
-                            "choice": "Swift",
-                            "url": "/questions/2/choices/1",
-                            "votes": 0
-                        }, {
-                            "choice": "Python",
-                            "url": "/questions/2/choices/2",
-                            "votes": 0
-                        }, {
-                            "choice": "Objective-C",
-                            "url": "/questions/2/choices/3",
-                            "votes": 0
-                        }, {
-                            "choice": "Ruby",
-                            "url": "/questions/2/choices/4",
-                            "votes": 0
-                        }
-                    ]
+            {
+                "orders":[
+                            {
+                                "order_id":1245,
+                                "approve_status":0,
+                                "customer":
+                                            {
+                                                "first_name":"Артур",
+                                                "second_name":"Радионов",
+                                                "patronymic_name":"Антонович",
+                                                "phone":"80955065456",
+                                                "photo":"http://lester.ua/api/download/dlv24/performer.jpg,
+                                                "gender":0,
+                                                "messanger_type":0,
+                                                "messanger_number":"skype:number"
+                                            },
+                                "recipient":
+                                            {
+                                                "first_name":"Андрей",
+                                                "second_name":"Шелохов",
+                                                "patronymic_name":"Сергеевич",
+                                                "phone":"80955065457",
+                                                "photo":"http://lester.ua/api/download/dlv24/performer.jpg",
+                                                "gender":1,
+                                                "messanger_type":1,
+                                                "messanger_number":"viber:number"
+                                            }
+                            }
+                        ],
+                "success": true,
+                "errors": []
+            }
+
+### Получить заказы исполнителя [GET /get_performer_orders]
+
++ Request
+    
+    + Headers
+        
+            Accept: "application/json"
+            Authorization: access_token
+
++ Parameters
+
+    + from_date: 1439299986 (number) - Начальная дата, миллисекунды (для завершенных заказов)
+    + to_date: 1439399986 (number) -Конечная дата, миллисекунды (для завершенных заказов)
+    
++ Response 200 (application/json)
+    
+    + Attributes
+        
+        + status (enum[number]) - Статус заказа
+            + Members
+                + 0 - К исполнению
+                + 1 - Поданная заявка
+                + 2 - Завершенный
+        + is_executed (boolean) - Заказ исполняется        
+        + customer_first_name (string) - Имя заказчика
+        + customer_second_name (string) - Фамилия заказчика            
+        + customer_phone (string) - Телефон заказчика
+        + customer_photo (string) - Фото заказчика
+        + customer_gender (number) - Пол заказчика
+        + rating (number) - Рейтинг 1-5 (Есть только в завершенном заказе)
+
+    + Body
+    
+            {
+                "success": true,
+                "errors": [],
+                "orders":[
+                            {   
+                                "order_id":4563,
+                                "status":0,
+                                "is_executed":true,
+                                "dispatch_address":"Херсон, ул. Херсонская, 12",
+                                "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                "dispatch_latitude":46.645004,
+                                "dispatch_longitude":32.635525,
+                                "delivery_latitude":46.644216,
+                                "delivery_longitude":32.630965,
+                                "distance":11,
+                                "customer":
+                                            {
+                                                "first_name":"Артур",
+                                                "second_name":"Радионов",
+                                                "patronymic_name":"Антонович",
+                                                "phone":"80955065456",
+                                                "photo":"http://lester.ua/api/download/dlv24/performer.jpg",
+                                                "gender":0,
+                                                "messanger_type":0,
+                                                "messanger_number":"skype:number"
+                                            },
+                                "recipient":
+                                            {
+                                                "first_name":"Андрей",
+                                                "second_name":"Шелохов",
+                                                "patronymic_name":"Сергеевич",
+                                                "phone":"80955065457",
+                                                "photo":"http://lester.ua/api/download/dlv24/driver.png",
+                                                "gender":1,
+                                                "messanger_type":1,
+                                                "messanger_number":"viber:number"
+                                            },
+                                "comment":"Очень хрупкий товар",
+                                "passenger_count":1,
+                                "service_type":0,
+                                "goods_loader":0,
+                                "goods_unloader":1,
+                                "goods_load_timestamp":1439296986,
+                                "estimated_delivery_timestamp":1439296986,
+                                "summary_goods_capacity":25,
+                                "summary_goods_weight":50,
+                                "summary_goods_count":2,
+                                "goods_delivery_cost":257.57,
+                                "goods":[
+                                            {
+                                                "name":"Инструменты",
+                                                "length":50,
+                                                "width":60, 
+                                                "height":63,
+                                                "weight":25,
+                                                "count":2,
+                                                "is_packed":true,
+                                                "units_system":0,
+                                                "units":0
+                                            }
+                                        ],
+                                "goods_characteristics":[1,2,3],
+                                "estimated_distance":52,
+                                "estimated_delivery_time":120,
+                                "cost":125.0,
+                                "currency":"UAH",
+                                "route":"...",
+                                "stages":[
+                                            {
+                                                "stage":0,
+                                                "date":1439299986
+                                            }, 
+                                            {
+                                                "stage":1,
+                                                "date":1439399986
+                                            }
+                                        ],
+                                "approve_status":0,        
+                                "published_date":1439289986,
+                                "completion_date":1439299986
+                            },
+                            {   
+                                "order_id":4562,
+                                "status":1,
+                                "is_executed":true,
+                                "dispatch_address":"Херсон, ул. Херсонская, 12",
+                                "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                "dispatch_latitude":46.645004,
+                                "dispatch_longitude":32.635525,
+                                "delivery_latitude":46.644216,
+                                "delivery_longitude":32.630965,
+                                "distance":11,
+                                "comment":"Очень хрупкий товар",
+                                "passenger_count":1,
+                                "service_type":0,
+                                "goods_loader":0,
+                                "goods_unloader":1,
+                                "goods_load_timestamp":1439296986,
+                                "estimated_delivery_timestamp":1439296986,
+                                "summary_goods_capacity":25,
+                                "summary_goods_weight":50,
+                                "summary_goods_count":2,
+                                "goods_delivery_cost":797.00,
+                                "goods":[
+                                            {
+                                                "name":"Инструменты",
+                                                "length":50,
+                                                "width":60, 
+                                                "height":63,
+                                                "weight":25,
+                                                "count":2,
+                                                "is_packed":true,
+                                                "units_system":0,
+                                                "units":0
+                                            }
+                                        ],
+                                "goods_characteristics":[1,2,3],
+                                "estimated_distance":52,
+                                "estimated_delivery_time":120,
+                                "cost":125.0,
+                                "currency":"UAH",
+                                "route":"...",
+                                "published_date":1439289986,
+                                "completion_date":1439299986
+                            },
+                            {   
+                                "order_id":4561,
+                                "status":2,
+                                "is_executed":true,
+                                "dispatch_address":"Херсон, ул. Херсонская, 12",
+                                "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                "dispatch_latitude":46.645004,
+                                "dispatch_longitude":32.635525,
+                                "delivery_latitude":46.644216,
+                                "delivery_longitude":32.630965,
+                                "distance":11,
+                                "customer":
+                                            {
+                                                "first_name":"Артур",
+                                                "second_name":"Радионов",
+                                                "patronymic_name":"Антонович",
+                                                "phone":"80955065456",
+                                                "photo":"http://lester.ua/api/download/dlv24/driver.png",
+                                                "gender":0,
+                                                "messanger_type":0,
+                                                "messanger_number":"skype:number"
+                                            },
+                                "recipient":
+                                            {
+                                                "first_name":"Андрей",
+                                                "second_name":"Шелохов",
+                                                "patronymic_name":"Сергеевич",
+                                                "phone":"80955065457",
+                                                "photo":"http://lester.ua/api/download/dlv24/driver.png",
+                                                "gender":1,
+                                                "messanger_type":1,
+                                                "messanger_number":"viber:number"
+                                            },
+                                "comment":"Очень хрупкий товар",
+                                "passenger_count":1,
+                                "service_type":0,
+                                "goods_loader":0,
+                                "goods_unloader":1,
+                                "goods_load_timestamp":1439296986,
+                                "estimated_delivery_timestamp":1439296986,
+                                "summary_goods_capacity":25,
+                                "summary_goods_weight":50,
+                                "summary_goods_count":2,
+                                "goods_delivery_cost":100.57,
+                                "goods":[
+                                            {
+                                                "name":"Инструменты",
+                                                "length":50,
+                                                "width":60, 
+                                                "height":63,
+                                                "weight":25,
+                                                "count":2,
+                                                "is_packed":true,
+                                                "units_system":0,
+                                                "units":0
+                                            }
+                                        ],
+                                "goods_characteristics":[1,2,3],
+                                "estimated_distance":52,
+                                "estimated_delivery_time":120,
+                                "cost":125.0,
+                                "currency":"UAH",
+                                "route":"...",
+                                "rating":3,
+                                "approve_status":1,
+                                "published_date":1439289986,
+                                "completion_date":1439299986
+                            }
+                         ]
+            }
+            
+### Отменить участие в доставке [GET /unsubscribe_from_order{?order_id,reason}]
+
++ Request
+    
+    + Headers
+        
+            Accept: "application/json"
+            Authorization: access_token
+
++ Parameters
+
+    + order_id (required,number) - Идентификатор заказа
+    + reason (string) - Причина отмены участия
+
++ Response 200 (application/json)
+
+    [Response][]
+    
+### Изменение этапа выполнение заказа [POST /change_delivery_order_stage]
+
++ Request
+
+    + Headers
+        
+            Accept: "application/json"
+            Authorization: access_token
+
+    + Attributes
+
+        + order_id (required,number) - Идентификатор заказа
+        + stage (enum[number]) - Этап перевозки
+            + Members
+                + 0 - Приступил к выполнению
+                + 1 - Груз загружен
+                + 2 - Груз разгружен
+        
++ Response 200 (application/json)
+    
+    + Attributes
+        
+        + date - Время начала этапа
+        
+    + Body  
+                
+            {
+                "date":1439299986,
+                "success": true,
+                "errors": []
+            } 
+
+### Завершить выполнение заказа [POST /complete_order]
+
++ Request
+
+    + Headers
+        
+            Accept: "application/json"
+            Authorization: access_token
+
+    + Attributes
+        
+        + order_id (required,number) - Идентификатор заказа
+        + order_code (string) - Код заказа. Для подтверждения
+        + has_problem (boolean) - Возникли проблемы
+        + problem_comment (string) - Комментарий о проблеме
+        + problem_photos (array[string]) - Фотографии возникшей проблемы в формате Base64
+
++ Request Завершить заказ (application/json)
+
+    + Headers
+        
+            Accept: "application/json"
+            Authorization: access_token
+            
+    + Body
+        
+            {
+                "order_id":4563,
+                "order_code":"132739AG"
+            }
+
++ Response 200 (application/json)
+
+    [Response][]        
+    
++ Request Возникли проблемы (application/json)
+
+    + Headers
+        
+            Accept: "application/json"
+            Authorization: access_token
+
+    + Body
+        
+            {
+                "order_id":4563,
+                "has_problem":true,
+                "problem_comment":"Не тот цвет",
+                "problem_photos":["..."]
+            }    
+
++ Response 200 (application/json)
+
+    [Response][]
+    
+### Попутные заказы [GET /passing_orders{?order_id}]
+
++ Request
+    
+    + Headers
+        
+            Accept: "application/json"
+            Authorization: access_token
+
++ Parameters
+
+    + order_id (required,number) - Идентификатор заказа
+    
++ Response 200 (application/json)
+
+    + Attributes
+    
+        + orders - Попутные заказы
+    
+    + Body    
+
+            {
+                "orders":[
+                            {   
+                                "order_id":4563,
+                                "status":0,
+                                "is_executed":false,
+                                "dispatch_address":"Херсон, ул. Херсонская, 12",
+                                "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                "dispatch_latitude":46.645004,
+                                "dispatch_longitude":32.635525,
+                                "delivery_latitude":46.644216,
+                                "delivery_longitude":32.630965,
+                                "distance":11,
+                                "customer_first_name":"Артур",
+                                "customer_second_name":"Радионов",
+                                "customer_phone":"80955065456",
+                                "customer_photo":"http://lester.ua/api/download/dlv24/performer.jpg",
+                                "customer_gender":0,
+                                "recipient_first_name":"Андрей",
+                                "recipient_second_name":"Шелохов",
+                                "recipient_phone":"80955065457",
+                                "recipient_photo":"http://lester.ua/api/download/dlv24/performer.jpg",
+                                "recipient_gender":1,
+                                "comment":"Очень хрупкий товар",
+                                "passenger_count":1,
+                                "service_type":0,
+                                "goods_loader":0,
+                                "goods_unloader":1,
+                                "goods_load_timestamp":1439296486,
+                                "estimated_delivery_timestamp":1439296986,
+                                "summary_goods_capacity":25,
+                                "summary_goods_weight":70,
+                                "summary_goods_count":2,
+                                "goods_delivery_cost":257.57,
+                                "goods":[
+                                            {
+                                                "name":"Инструменты",
+                                                "length":50,
+                                                "width":60, 
+                                                "height":63,
+                                                "weight":25,
+                                                "count":2,
+                                                "is_packed":true,
+                                                "units_system":0,
+                                                "units":0
+                                            }
+                                        ],
+                                "goods_characteristics":[1,2,3],
+                                "estimated_distance":96,
+                                "estimated_delivery_time":120,
+                                "cost":125.0,
+                                "currency":"UAH",
+                                "route":"...",
+                                "stages":[
+                                            {
+                                                "stage":0,
+                                                "date":1439299986
+                                            }, 
+                                            {
+                                                "stage":1,
+                                                "date":1439399986
+                                            }
+                                        ],
+                                "published_date":1439289916,
+                                "completion_date":1439299586
+                            },
+                            {   
+                                "order_id":4562,
+                                "status":0,
+                                "is_executed":false,
+                                "dispatch_address":"Херсон, ул. Херсонская, 12",
+                                "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                "dispatch_latitude":46.645004,
+                                "dispatch_longitude":32.635525,
+                                "delivery_latitude":46.644216,
+                                "delivery_longitude":32.630965,
+                                "distance":11,
+                                "customer_first_name":"Артур",
+                                "customer_second_name":"Радионов",
+                                "customer_phone":"80955065456",
+                                "customer_photo":"http://lester.ua/api/download/dlv24/performer.jpg",
+                                "customer_gender":0,
+                                "recipient_first_name":"Андрей",
+                                "recipient_second_name":"Шелохов",
+                                "recipient_phone":"80955065457",
+                                "recipient_photo":"http://lester.ua/api/download/dlv24/performer.jpg",
+                                "recipient_gender":1,
+                                "comment":"Очень хрупкий товар",
+                                "passenger_count":1,
+                                "service_type":0,
+                                "goods_loader":0,
+                                "goods_unloader":1,
+                                "goods_load_timestamp":1439296986,
+                                "estimated_delivery_timestamp":1439296986,
+                                "summary_goods_capacity":25,
+                                "summary_goods_weight":50,
+                                "summary_goods_count":2,
+                                "goods_delivery_cost":797.00,
+                                "goods":[
+                                            {
+                                                "name":"Инструменты",
+                                                "length":50,
+                                                "width":60, 
+                                                "height":63,
+                                                "weight":25,
+                                                "count":2,
+                                                "is_packed":true,
+                                                "units_system":0,
+                                                "units":0
+                                            }
+                                        ],
+                                "goods_characteristics":[1,2,3],
+                                "estimated_distance":52,
+                                "estimated_delivery_time":120,
+                                "cost":125.0,
+                                "currency":"UAH",
+                                "route":"...",
+                                "published_date":1439289986,
+                                "completion_date":1439299986
+                            }
+                        ],
+                "success": true,
+                "errors": []        
+            }
+
+## Личная информация перевозчика/курьера [GET /performer_info{?uid}]
+
++ Request
+    
+    + Headers
+        
+            Accept: "application/json"
+            Authorization: access_token
+
++ Parameters
+
+    + uid: 1212 (array[number]) - Идентификаторы исполнителей
+    
++ Response 200 (application/json)
+    
+    + Attributes
+    
+        + first_name (string) - Имя
+        + second_name (string) - Фамилия
+        + patronymic_name (string) - Отчество
+        + date_of_birth (number) - Дата рождения в миллисекундах
+        + phone (string) - Телефон
+        + email (string) - Почта
+        + messanger_type (required, enum[number]) - Предпочтительный тип связи
+            + Members
+                + 0 - Skype
+                + 1 - Viber
+        + messanger_number (required, string) - Номер мессенджера 
+        + photo (string) - Фотография пользователя
+        + gender: 0 (enum[number]) - Пол
+            + Members
+                + 0 - мужской
+                + 1 - женский
+        + work_schedule (enum[number]) - График работы
+            + Members
+                + 0 - Частичная занятость
+                + 1 - Полная занятость
+        + driving_experience (number) - Водительский стаж, кол. лет
+        + driving_category (string) - Водительские категории        
+        + rating (number) - Общий рейтинг 1-5        
+        + feedbacks
+            + customer_name (string) - Имя заказчика
+            + city (string) - Город
+            + feedback (string) - Отзыв
+            + rating (number) - Рейтинг 1-5
+            + date (number) - Дата отзыва
+        + done_delivers_count (number) - Количество  выполненных доставок    
+        + vehicle_information (object) - Информация о машине
+            + model (required, string) - Марка
+            + name (required, string) - Название
+            + type (required, enum[number]) - Тип автомобиля
+                + Members
+                    + 0 - Фургон пассажир
+                    + 1 - Микроавтобус грузовой
+                    + 2 - Шасси (борт, фургон)
+                    + 3 - Самосвал
+            + build_year (number) - Год выпуска, миллисекунды
+            + state_number (required, string) - Гос. номер
+            + vehicle_photos (string) - Фотографии автомобиля
+            + carrying (number) - Грузоподъемность, кг.
+            + external_vehicle_size - Габариты автомобиля
+                + height (number) - Высота
+                + width (number) - Ширина
+                + length (number) - Длина
+            + internal_vehicle_size - Внутринние габариты автомобиля
+                + height (number) - Высота
+                + width (number) - Ширина
+                + length (number) - Длина
+        
+    + Body      
+        
+            {
+                "success": true,
+                "errors": [],
+                "first_name":"Евгений", 
+                "second_name":"Кондратьев",
+                "patronymic_name":"Васильевич",
+                "date_of_birth":1439296986,
+                "phone":"380955039467", 
+                "email":"email@gmail.com",
+                "messanger_type":0,
+                "messanger_number":"skypeName",
+                "photo":"http://lester.ua/api/download/dlv24/performer.jpg",
+                "gender":0, 
+                "work_schedule":1,
+                "driving_experience":8,
+                "driving_category":"A,B,C",
+                "rating":3,
+                "feedbacks":[
+                                {
+                                    "customer_name":"Юрий",
+                                    "city":"г. Киев",
+                                    "feedback":"Груз доставлен аккуратно. Спасибо.",
+                                    "rating":3,
+                                    "date":1439299986
+                                }
+                            ],
+                "vehicle_information":{
+                    "model":"Ford",
+                    "name":"Transit",
+                    "type":1,
+                    "build_year":1439296986,
+                    "state_number":"AA5676KA",
+                    "photos":["http://lester.ua/api/download/dlv24/vehicle1.jpg",
+                                "http://lester.ua/api/download/dlv24/vehicle2.jpg",
+                                "http://lester.ua/api/download/dlv24/vehicle3.jpg",
+                                "http://lester.ua/api/download/dlv24/vehicle4.jpg"],
+                    "has_insurance":true,
+                    "carrying":1500,
+                    "external_vehicle_size":{
+                                                "height":1000,
+                                                "width":500,
+                                                "length":2000
+                                            },
+                    "internal_vehicle_size":{
+                                    "height":1200,
+                                    "width":600,
+                                    "length":2500
+                                },
+                    "capacity":1.8,
+                    "units_system":0,
+                    "units":0
                 }
+            }
+
+# Errors [/errors]
+
++ Model (application/json)
+
+        {
+            "success": false,
+            "errors": [
+                {
+                    "code":1,
+                    "message":"Such user already registered"
+                }
+            ]
+        }
+        
+# Response [/response]
+
++ Model (application/json)
+
+        {
+            "success": true,
+            "errors": []
+        }
+        
