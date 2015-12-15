@@ -656,6 +656,7 @@ HOST: https://delivery.apiblueprint.org/
                 "goods_delivery_cost":257.57,
                 "applications":[
                                     {
+                                        "id": 1,
                                         "recipient_first_name":"Андрей",
                                         "recipient_second_name":"Шелохов",
                                         "recipient_phone":"80955065457",
@@ -812,6 +813,7 @@ HOST: https://delivery.apiblueprint.org/
                         "goods_delivery_cost":257.57,
                         "applications":[
                             {
+                                "id":1,
                                 "recipient_first_name":"Андрей",
                                 "recipient_second_name":"Шелохов",
                                 "recipient_phone":"80955065457",
@@ -883,6 +885,7 @@ HOST: https://delivery.apiblueprint.org/
                         "goods_delivery_cost":257.57,
                         "applications":[
                             {
+                                "id":1,
                                 "recipient_first_name":"Андрей",
                                 "recipient_second_name":"Шелохов",
                                 "recipient_phone":"80955065457",
@@ -954,6 +957,7 @@ HOST: https://delivery.apiblueprint.org/
                         "goods_delivery_cost":257.57,
                         "applications":[
                             {
+                                "id":1,
                                 "recipient_first_name":"Андрей",
                                 "recipient_second_name":"Шелохов",
                                 "recipient_phone":"80955065457",
@@ -1025,6 +1029,7 @@ HOST: https://delivery.apiblueprint.org/
                         "goods_delivery_cost":257.57,
                         "applications":[
                             {
+                                "id":1,
                                 "recipient_first_name":"Андрей",
                                 "recipient_second_name":"Шелохов",
                                 "recipient_phone":"80955065457",
@@ -1096,6 +1101,7 @@ HOST: https://delivery.apiblueprint.org/
                         "goods_delivery_cost":257.57,
                         "applications":[
                             {
+                                "id":1,
                                 "recipient_first_name":"Андрей",
                                 "recipient_second_name":"Шелохов",
                                 "recipient_phone":"80955065457",
@@ -1167,6 +1173,7 @@ HOST: https://delivery.apiblueprint.org/
                         "goods_delivery_cost":257.57,
                         "applications":[
                             {
+                                "id":1,
                                 "recipient_first_name":"Андрей",
                                 "recipient_second_name":"Шелохов",
                                 "recipient_phone":"80955065457",
@@ -1259,20 +1266,27 @@ HOST: https://delivery.apiblueprint.org/
     + Body  
                 
             {
-                "current_longitude":32.635525,
-                "current_latitude":46.644216,
-                "stages":[
+                "applications":[
+                    {
+                        "application_id":1,
+                        "current_longitude":32.635525,
+                        "current_latitude":46.644216,
+                        "stages":[
                             {
                                 "stage":0,
                                 "date":1439299986
-                            }, 
+                            },
                             {
                                 "stage":1,
                                 "date":1439399986
                             }
-                        ],
-                "success": true,
-                "errors": []
+                        ]
+                    }
+                ],
+                "success":true,
+                "errors":[
+            
+                ]
             }
     
 ### Оставить отзыв [POST /send_feedback]
