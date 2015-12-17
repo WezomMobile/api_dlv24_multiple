@@ -765,7 +765,6 @@ HOST: https://delivery.apiblueprint.org/
                 "errors": []    
             }
 
-
 ### Получить все заказы заказчика [GET /get_customer_orders]
 
 + Request
@@ -776,23 +775,6 @@ HOST: https://delivery.apiblueprint.org/
             Authorization: access_token
     
 + Response 200 (application/json)
-    
-    + Attributes
-        
-        + performer_name (string) - Имя исполнителя
-        + performer_id (number) - Идентификатор исполнителя
-        + subscribed_performers (array[number]) - Массив подписанных исполнителей
-        + order_code (string) - Код заказа. Нужен для подтверждения доставки
-        + status (enum[number]) - Статус заказа
-            + Members
-                + 0 - Открытый
-                + 1 - В работе
-                + 2 - Не выполненный
-                + 3 - Завершенный
-                + 4 - Черновик
-        + comment (string) - Комментарий если возникли проблемы
-        + published_date (required, number) - Дата публикации
-        + completion_date (number) - Дата выполнениния заказа
     
     + Body
     
@@ -864,7 +846,7 @@ HOST: https://delivery.apiblueprint.org/
                                     }
                                 ]
                             },
-                                                        {
+                            {
                                 "id":2,
                                 "recipient_first_name":"Петя",
                                 "recipient_second_name":"Петров",
@@ -963,6 +945,34 @@ HOST: https://delivery.apiblueprint.org/
                                         ]
                                     }
                                 ]
+                            },
+                            {
+                                "id":2,
+                                "recipient_first_name":"Андрей",
+                                "recipient_second_name":"Шелохов",
+                                "recipient_phone":"80955065457",
+                                "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                "delivery_latitude":46.644216,
+                                "delivery_longitude":32.630965,
+                                "goods_unloader":1,
+                                "goods":[
+                                    {
+                                        "name":"Шкаф, шкаф",
+                                        "length":50,
+                                        "width":60,
+                                        "height":63,
+                                        "weight":25,
+                                        "count":2,
+                                        "is_packed":true,
+                                        "units_system":0,
+                                        "units":0,
+                                        "goods_characteristics":[
+                                            0,
+                                            1,
+                                            2
+                                        ]
+                                    }
+                                ]
                             }
                         ],
                         "estimated_distance":52,
@@ -1010,6 +1020,34 @@ HOST: https://delivery.apiblueprint.org/
                         "applications":[
                             {
                                 "id":1,
+                                "recipient_first_name":"Андрей",
+                                "recipient_second_name":"Шелохов",
+                                "recipient_phone":"80955065457",
+                                "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                "delivery_latitude":46.644216,
+                                "delivery_longitude":32.630965,
+                                "goods_unloader":1,
+                                "goods":[
+                                    {
+                                        "name":"Шкаф, шкаф",
+                                        "length":50,
+                                        "width":60,
+                                        "height":63,
+                                        "weight":25,
+                                        "count":2,
+                                        "is_packed":true,
+                                        "units_system":0,
+                                        "units":0,
+                                        "goods_characteristics":[
+                                            0,
+                                            1,
+                                            2
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "id":2,
                                 "recipient_first_name":"Андрей",
                                 "recipient_second_name":"Шелохов",
                                 "recipient_phone":"80955065457",
@@ -1107,6 +1145,34 @@ HOST: https://delivery.apiblueprint.org/
                                         ]
                                     }
                                 ]
+                            },
+                            {
+                                "id":2,
+                                "recipient_first_name":"Андрей",
+                                "recipient_second_name":"Шелохов",
+                                "recipient_phone":"80955065457",
+                                "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                "delivery_latitude":46.644216,
+                                "delivery_longitude":32.630965,
+                                "goods_unloader":1,
+                                "goods":[
+                                    {
+                                        "name":"Шкаф, шкаф",
+                                        "length":50,
+                                        "width":60,
+                                        "height":63,
+                                        "weight":25,
+                                        "count":2,
+                                        "is_packed":true,
+                                        "units_system":0,
+                                        "units":0,
+                                        "goods_characteristics":[
+                                            0,
+                                            1,
+                                            2
+                                        ]
+                                    }
+                                ]
                             }
                         ],
                         "estimated_distance":52,
@@ -1154,6 +1220,34 @@ HOST: https://delivery.apiblueprint.org/
                         "applications":[
                             {
                                 "id":1,
+                                "recipient_first_name":"Андрей",
+                                "recipient_second_name":"Шелохов",
+                                "recipient_phone":"80955065457",
+                                "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                "delivery_latitude":46.644216,
+                                "delivery_longitude":32.630965,
+                                "goods_unloader":1,
+                                "goods":[
+                                    {
+                                        "name":"Шкаф, шкаф",
+                                        "length":50,
+                                        "width":60,
+                                        "height":63,
+                                        "weight":25,
+                                        "count":2,
+                                        "is_packed":true,
+                                        "units_system":0,
+                                        "units":0,
+                                        "goods_characteristics":[
+                                            0,
+                                            1,
+                                            2
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "id":2,
                                 "recipient_first_name":"Андрей",
                                 "recipient_second_name":"Шелохов",
                                 "recipient_phone":"80955065457",
@@ -1251,6 +1345,34 @@ HOST: https://delivery.apiblueprint.org/
                                         ]
                                     }
                                 ]
+                            },
+                            {
+                                "id":2,
+                                "recipient_first_name":"Андрей",
+                                "recipient_second_name":"Шелохов",
+                                "recipient_phone":"80955065457",
+                                "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                "delivery_latitude":46.644216,
+                                "delivery_longitude":32.630965,
+                                "goods_unloader":1,
+                                "goods":[
+                                    {
+                                        "name":"Шкаф, шкаф",
+                                        "length":50,
+                                        "width":60,
+                                        "height":63,
+                                        "weight":25,
+                                        "count":2,
+                                        "is_packed":true,
+                                        "units_system":0,
+                                        "units":0,
+                                        "goods_characteristics":[
+                                            0,
+                                            1,
+                                            2
+                                        ]
+                                    }
+                                ]
                             }
                         ],
                         "estimated_distance":52,
@@ -1321,6 +1443,25 @@ HOST: https://delivery.apiblueprint.org/
                 "applications":[
                     {
                         "application_id":1,
+                        "current_longitude":32.635525,
+                        "current_latitude":46.644216,
+                        "stages":[
+                            {
+                                "stage":0,
+                                "date":1439299986
+                            },
+                            {
+                                "stage":1,
+                                "date":1439399986
+                            },
+                            {
+                                "stage":2,
+                                "date":1439399986
+                            }
+                        ]
+                    },
+                    {
+                        "application_id":2,
                         "current_longitude":32.635525,
                         "current_latitude":46.644216,
                         "stages":[
@@ -1457,222 +1598,251 @@ HOST: https://delivery.apiblueprint.org/
 
 + Response 200 (application/json)
     
-        {
-            "orders":[
-                        {
-                            "order_id":4563,
-                            "dispatch_address":"Херсон, ул. Херсонская, 12",
-                            "delivery_address":"Херсон, ул. Покрышева, 68А",
-                            "dispatch_latitude":46.645004,
-                            "dispatch_longitude":32.635525,
-                            "delivery_latitude":46.644216,
-                            "delivery_longitude":32.630965,
-                            "distance":11,
-                            "comment":"Очень хрупкий товар",
-                            "passenger_count":1,
-                            "service_type":0,
-                            "goods_loader":0,
-                            "goods_unloader":1,
-                            "goods_load_timestamp":1439296986,
-                            "estimated_delivery_timestamp":1439296986,
-                            "summary_goods_capacity":25,
-                            "summary_goods_weight":50,
-                            "summary_goods_count":2,
-                            "goods_delivery_cost":257.57,
-                            "goods":[
-                                        {
-                                            "name":"Инструменты, коробки",
-                                            "length":50,
-                                            "width":60, 
-                                            "height":63,
-                                            "weight":25,
-                                            "count":2,
-                                            "is_packed":true,
-                                            "units_system":0,
-                                            "units":0
-                                        }
-                                    ],
-                            "goods_characteristics":[1,2,3],
-                            "estimated_distance":52,
-                            "estimated_delivery_time":120,
-                            "recommended_cost":125.0,
-                            "commission":7.50,
-                            "currency":"UAH",
-                            "route":"...",
-                            "published_date":1439296986000
-                        },
-                        {
-                            "order_id":4575,
-                            "dispatch_address":"Херсон, ул. Херсонская, 11",
-                            "delivery_address":"Херсон, ул. Покрышева, 5А",
-                            "dispatch_latitude":45.645004,
-                            "dispatch_longitude":36.635525,
-                            "delivery_latitude":46.644216,
-                            "delivery_longitude":32.630965,
-                            "distance":16,
-                            "comment":"Очень хрупкий товар",
-                            "passenger_count":1,
-                            "service_type":0,
-                            "goods_loader":0,
-                            "goods_unloader":1,
-                            "goods_load_timestamp":1439296986,
-                            "estimated_delivery_timestamp":1439296986,
-                            "summary_goods_capacity":25,
-                            "summary_goods_weight":100,
-                            "summary_goods_count":2,
-                            "goods_delivery_cost":157.57,
-                            "goods":[
-                                        {
-                                            "name":"Инструменты, дрель, шкаф",
-                                            "length":50,
-                                            "width":60, 
-                                            "height":63,
-                                            "weight":25,
-                                            "count":2,
-                                            "is_packed":true,
-                                            "units_system":0,
-                                            "units":0
-                                        }
-                                    ],
-                            "goods_characteristics":[1,2,3],
-                            "estimated_distance":556,
-                            "estimated_delivery_time":120,
-                            "recommended_cost":525.0,
-                            "commission":7.50,
-                            "currency":"UAH",
-                            "route":"...",
-                            "published_date":1439296986
-                        },
-                        {
-                            "order_id":456,
-                            "dispatch_address":"Херсон, ул. Херсонская, 12",
-                            "delivery_address":"Херсон, ул. Покрышева, 68А",
-                            "dispatch_latitude":46.645004,
-                            "dispatch_longitude":32.635525,
-                            "delivery_latitude":46.644216,
-                            "delivery_longitude":32.630965,
-                            "distance":196,
-                            "comment":"Очень хрупкий товар",
-                            "passenger_count":1,
-                            "service_type":0,
-                            "goods_loader":0,
-                            "goods_unloader":1,
-                            "goods_load_timestamp":1439296986,
-                            "estimated_delivery_timestamp":1439296986,
-                            "summary_goods_capacity":25,
-                            "summary_goods_weight":505,
-                            "summary_goods_count":2,
-                            "goods_delivery_cost":27.57,
-                            "goods":[
-                                        {
-                                            "name":"Коробки, столы",
-                                            "length":50,
-                                            "width":60, 
-                                            "height":63,
-                                            "weight":25,
-                                            "count":2,
-                                            "is_packed":true,
-                                            "units_system":0,
-                                            "units":0
-                                        }
-                                    ],
-                            "goods_characteristics":[1,2,3],
-                            "estimated_distance":52,
-                            "estimated_delivery_time":120,
-                            "recommended_cost":125.0,
-                            "commission":7.50,
-                            "currency":"UAH",
-                            "route":"...",
-                            "published_date":1439298486000
-                        },
-                        {
-                            "order_id":1563,
-                            "dispatch_address":"Херсон, ул. Херсонская, 9",
-                            "delivery_address":"Херсон, ул. Покрышева, 68А",
-                            "dispatch_latitude":46.645004,
-                            "dispatch_longitude":32.635525,
-                            "delivery_latitude":46.644216,
-                            "delivery_longitude":32.630965,
-                            "distance":111,
-                            "comment":"Очень хрупкий товар",
-                            "passenger_count":1,
-                            "service_type":0,
-                            "goods_loader":0,
-                            "goods_unloader":1,
-                            "goods_load_timestamp":1439296986000,
-                            "estimated_delivery_timestamp":1439296986,
-                            "summary_goods_capacity":25,
-                            "summary_goods_weight":50,
-                            "summary_goods_count":2,
-                            "goods_delivery_cost":2667.57,
-                            "goods":[
-                                        {
-                                            "name":"Инструменты, кирпичи",
-                                            "length":50,
-                                            "width":60, 
-                                            "height":63,
-                                            "weight":25,
-                                            "count":2,
-                                            "is_packed":true,
-                                            "units_system":0,
-                                            "units":0
-                                        }
-                                    ],
-                            "goods_characteristics":[1,2,3],
-                            "estimated_distance":52,
-                            "estimated_delivery_time":120,
-                            "recommended_cost":1245.0,
-                            "commission":7.50,
-                            "currency":"UAH",
-                            "route":"...",
-                            "published_date":1439293986
-                        },
-                        {
-                            "order_id":45883,
-                            "dispatch_address":"Херсон, ул. Херсонская, 1",
-                            "delivery_address":"Херсон, ул. Покрышева, 68А",
-                            "dispatch_latitude":46.645004,
-                            "dispatch_longitude":32.635525,
-                            "delivery_latitude":46.644216,
-                            "delivery_longitude":32.630965,
-                            "distance":117,
-                            "comment":"Очень хрупкий товар",
-                            "passenger_count":1,
-                            "service_type":0,
-                            "goods_loader":0,
-                            "goods_unloader":1,
-                            "goods_load_timestamp":1439296986,
-                            "estimated_delivery_timestamp":1439296986,
-                            "summary_goods_capacity":25,
-                            "summary_goods_weight":5440,
-                            "summary_goods_count":2,
-                            "goods_delivery_cost":2547.57,
-                            "goods":[
-                                        {
-                                            "name":"Инструменты",
-                                            "length":50,
-                                            "width":60, 
-                                            "height":63,
-                                            "weight":25,
-                                            "count":2,
-                                            "is_packed":true,
-                                            "units_system":0,
-                                            "units":0
-                                        }
-                                    ],
-                            "goods_characteristics":[1,2,3],
-                            "estimated_distance":532,
-                            "estimated_delivery_time":120,
-                            "recommended_cost":125.0,
-                            "commission":7.50,
-                            "currency":"UAH",
-                            "route":"...",
-                            "published_date":1439298486
-                        }
-                     ],
-            "success": true,
-            "errors": []     
-        }
+            {
+                "orders":[
+                    {
+                        "order_id":4563,
+                        "dispatch_address":"Херсон, ул. Херсонская, 12",
+                        "dispatch_latitude":46.645004,
+                        "dispatch_longitude":32.635525,
+                        "distance":11,
+                        "comment":"Очень хрупкий товар",
+                        "passenger_count":1,
+                        "service_type":0,
+                        "goods_loader":0,
+                        "goods_load_timestamp":1439296986,
+                        "estimated_delivery_timestamp":1439296986,
+                        "goods_delivery_cost":257.57,
+                        "estimated_distance":52,
+                        "estimated_delivery_time":120,
+                        "recommended_cost":125.0,
+                        "commission":7.50,
+                        "currency":"UAH",
+                        "route":"...",
+                        "published_date":1439296986000,
+                        "applications":[
+                            {
+                                "id":1,
+                                "recipient_first_name":"Андрей",
+                                "recipient_second_name":"Шелохов",
+                                "recipient_phone":"80955065457",
+                                "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                "delivery_latitude":46.644216,
+                                "delivery_longitude":32.630965,
+                                "goods_unloader":1,
+                                "goods":[
+                                    {
+                                        "name":"Шкаф, шкаф",
+                                        "length":50,
+                                        "width":60,
+                                        "height":63,
+                                        "weight":25,
+                                        "count":2,
+                                        "is_packed":true,
+                                        "units_system":0,
+                                        "units":0,
+                                        "goods_characteristics":[
+                                            0,
+                                            1,
+                                            2
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "id":2,
+                                "recipient_first_name":"Петя",
+                                "recipient_second_name":"Петров",
+                                "recipient_phone":"80955065457",
+                                "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                "delivery_latitude":46.645216,
+                                "delivery_longitude":32.631965,
+                                "goods_unloader":1,
+                                "goods":[
+                                    {
+                                        "name":"Шкаф, шкаф",
+                                        "length":50,
+                                        "width":60,
+                                        "height":63,
+                                        "weight":25,
+                                        "count":2,
+                                        "is_packed":true,
+                                        "units_system":0,
+                                        "units":0,
+                                        "goods_characteristics":[
+                                            0,
+                                            1,
+                                            2
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "order_id":4564,
+                        "dispatch_address":"Херсон, ул. Херсонская, 12",
+                        "dispatch_latitude":46.645004,
+                        "dispatch_longitude":32.635525,
+                        "distance":11,
+                        "comment":"Очень хрупкий товар",
+                        "passenger_count":1,
+                        "service_type":0,
+                        "goods_loader":0,
+                        "goods_load_timestamp":1439296986,
+                        "estimated_delivery_timestamp":1439296986,
+                        "goods_delivery_cost":257.57,
+                        "estimated_distance":52,
+                        "estimated_delivery_time":120,
+                        "recommended_cost":125.0,
+                        "commission":7.50,
+                        "currency":"UAH",
+                        "route":"...",
+                        "published_date":1439296986000,
+                        "applications":[
+                            {
+                                "id":1,
+                                "recipient_first_name":"Андрей",
+                                "recipient_second_name":"Шелохов",
+                                "recipient_phone":"80955065457",
+                                "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                "delivery_latitude":46.644216,
+                                "delivery_longitude":32.630965,
+                                "goods_unloader":1,
+                                "goods":[
+                                    {
+                                        "name":"Шкаф, шкаф",
+                                        "length":50,
+                                        "width":60,
+                                        "height":63,
+                                        "weight":25,
+                                        "count":2,
+                                        "is_packed":true,
+                                        "units_system":0,
+                                        "units":0,
+                                        "goods_characteristics":[
+                                            0,
+                                            1,
+                                            2
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "id":2,
+                                "recipient_first_name":"Петя",
+                                "recipient_second_name":"Петров",
+                                "recipient_phone":"80955065457",
+                                "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                "delivery_latitude":46.645216,
+                                "delivery_longitude":32.631965,
+                                "goods_unloader":1,
+                                "goods":[
+                                    {
+                                        "name":"Шкаф, шкаф",
+                                        "length":50,
+                                        "width":60,
+                                        "height":63,
+                                        "weight":25,
+                                        "count":2,
+                                        "is_packed":true,
+                                        "units_system":0,
+                                        "units":0,
+                                        "goods_characteristics":[
+                                            0,
+                                            1,
+                                            2
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "order_id":4565,
+                        "dispatch_address":"Херсон, ул. Херсонская, 12",
+                        "dispatch_latitude":46.645004,
+                        "dispatch_longitude":32.635525,
+                        "distance":11,
+                        "comment":"Очень хрупкий товар",
+                        "passenger_count":1,
+                        "service_type":0,
+                        "goods_loader":0,
+                        "goods_load_timestamp":1439296986,
+                        "estimated_delivery_timestamp":1439296986,
+                        "goods_delivery_cost":257.57,
+                        "estimated_distance":52,
+                        "estimated_delivery_time":120,
+                        "recommended_cost":125.0,
+                        "commission":7.50,
+                        "currency":"UAH",
+                        "route":"...",
+                        "published_date":1439296986000,
+                        "applications":[
+                            {
+                                "id":1,
+                                "recipient_first_name":"Андрей",
+                                "recipient_second_name":"Шелохов",
+                                "recipient_phone":"80955065457",
+                                "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                "delivery_latitude":46.644216,
+                                "delivery_longitude":32.630965,
+                                "goods_unloader":1,
+                                "goods":[
+                                    {
+                                        "name":"Шкаф, шкаф",
+                                        "length":50,
+                                        "width":60,
+                                        "height":63,
+                                        "weight":25,
+                                        "count":2,
+                                        "is_packed":true,
+                                        "units_system":0,
+                                        "units":0,
+                                        "goods_characteristics":[
+                                            0,
+                                            1,
+                                            2
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "id":2,
+                                "recipient_first_name":"Петя",
+                                "recipient_second_name":"Петров",
+                                "recipient_phone":"80955065457",
+                                "delivery_address":"Херсон, ул. Покрышева, 68А",
+                                "delivery_latitude":46.645216,
+                                "delivery_longitude":32.631965,
+                                "goods_unloader":1,
+                                "goods":[
+                                    {
+                                        "name":"Шкаф, шкаф",
+                                        "length":50,
+                                        "width":60,
+                                        "height":63,
+                                        "weight":25,
+                                        "count":2,
+                                        "is_packed":true,
+                                        "units_system":0,
+                                        "units":0,
+                                        "goods_characteristics":[
+                                            0,
+                                            1,
+                                            2
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "success":true,
+                "errors":[
+            
+                ]
+            }
                 
 ### Подать заявку на доставку [POST /subscribe_to_order]
 
